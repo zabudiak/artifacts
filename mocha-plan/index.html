@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mocha: what to change, and what to leave alone</title>
+<style>
+:root{--bg:#111315;--card:#1a1d20;--fg:#e7e9ea;--mut:#9aa3ab;--acc:#7cc4a4;--warn:#e0b25c;--line:#2a2f34}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+h1{font-size:1.55rem;margin:0 0 6px}
+h2{font-size:1.15rem;margin:34px 0 10px;color:var(--acc)}
+h3{font-size:1rem;margin:0 0 6px}
+p,li{color:var(--fg)}
+.mut{color:var(--mut);font-size:.9rem}
+ul{padding-left:20px;margin:6px 0}
+li{margin:4px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.tag{font-size:.78rem;border:1px solid var(--line);border-radius:99px;padding:2px 9px;color:var(--mut)}
+.tag.hi{color:var(--acc);border-color:#2f5a48}
+.tag.w{color:var(--warn);border-color:#5a4a2a}
+code{background:#0c0e10;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.84em;word-break:break-word}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+td,th{border-bottom:1px solid var(--line);padding:7px 6px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}
+.n{display:inline-block;min-width:24px;color:var(--acc);font-weight:700}
+</style>
+</head>
+<body>
+<main>
+<h1>Mocha: what to change, and what to leave alone</h1>
+<p class="mut">Prepared Fri 9 Oct 2026 for Zaid. Sources: Mitchell Keller's X article "The six levels of working with Grok Bot" (30 Sep) and his reply on running work through a CLI; a read-only look at <code>~/Documents/Synteria</code> on Mocha-3, part of it surveyed by Haiku through the Claude CLI and then spot-checked. Nothing in the workspace was changed.</p>
+
+<h2>1. The thread, in short</h2>
+<p>Mitchell's article sets out a ladder: one "First Mate" bot you talk to, "Second Mates" that own domains like GTM, a bench of consultant bots, routines, an always-on box, connectors to real work surfaces, and approval gates on anything that sends or spends. In a reply he adds the part that matters most for cost: Grok Bot usage counts model spend and compute, so hand routine work to a CLI on your own machine (his bot sends work to a Codex model).</p>
+<table>
+<tr><th>Applies to you</th><th>Doesn't apply (yet)</th></tr>
+<tr><td>
+<ul>
+<li>Push heavy reading to a CLI on the Mac (Haiku via <code>claude -p</code>).</li>
+<li>Budget routines by work done each week. Start with fewer and add more later.</li>
+<li>Connect only what a workflow needs.</li>
+<li>Let routines find work for you: proposals owed, gone-quiet leads, roster drift.</li>
+<li>Ask before anything that sends or spends. You already run this way.</li>
+</ul></td><td>
+<ul>
+<li>A First Mate / Second Mate hierarchy. You have one assistant and one business, and an extra layer would only add routing cost.</li>
+<li>Consultant bench and "Distill Anyone" rooms.</li>
+<li>Code Mode MCP gateway, VPS, Infisical. More infrastructure than you need right now.</li>
+<li>Clay Desk or other paid enrichment running on its own.</li>
+<li>Bookmark reviewer routine.</li>
+</ul></td></tr>
+</table>
+
+<h2>2. What the workspace shows you actually need</h2>
+<ul>
+<li><b>Most of the machinery already exists.</b> Follow ups (numbered drafts, <code>send &lt;slug&gt; &lt;numbers&gt;</code> gate, review UI on :5055), hot-reply watch and meeting digest on Modal, Proposal gen (<code>proposal.synteria.co</code>, <code>proposal-cli.ts check</code>), onboarding ingest on launchd. Mocha doesn't need to rebuild any of it. It needs to read from it.</li>
+<li><b>Instantly is reachable, just not by a connector.</b> <code>Client Operations/Follow ups/scripts/instantly_api.py</code> already has read-only <code>list_leads</code>, <code>list_emails_for_lead</code> and <code>get_email</code> against the Unibox. The roster itself notes that Unibox replies don't show in Gmail Sent.</li>
+<li><b>Call scripts exist</b> in <code>Client Operations/Meeting summariser/docs/sales_playbooks/</code> (sales call cockpit, call framework v2, discovery playbook, ICP notes). Per-client call briefs live in <code>_clients/&lt;slug&gt;/</code>.</li>
+<li><b>Proposals owed.</b> Hitch (Sean Cleland): proposal with terms, onboarding form and the sample list resend, all before the Tue 13 Oct 20:00 Dublin call (<code>_clients/hitch/2026-10-09_owed-and-offer-options.md</code>). Graziani / Greenfire Strategy: proposal and case studies before the 13 Oct follow-up; the grazianimultimedia address bounced, so use greenfirestrategy. <b>Sapt: no match anywhere in the workspace.</b> Need the full name or company.</li>
+<li><b>Name clashes are real, and they're not only Bens.</b> The workspace has one Ben as a client (Ben Edwards, ContextWest); other Bens show up only as leads in exports. Higher risk: three Michaels (ContextWest's Michael, Michael Wright, Michael Huereque), three Nicks (Nick Kowalczyk, N5's Nick, Nik Hall), Matt Starrett vs Matthew, two Andrews, two Alexes.</li>
+<li><b>Roster drift.</b> ROSTER vs <code>registry.json</code> vs Instantly disagree for N5, AdCrunch and Vector is Love. ROSTER still lists the Hitch call as upcoming. <code>_state/ATTENTION.md</code> flags an N5 draft batch 29 days old.</li>
+<li><b>Overlap with Mocha.</b> The Modal meeting digest posts to Discord at 08:00, Mocha's morning brief runs at 07:30, and the hot-reply watch already posts replies. Running all three is where the duplicate pings come from.</li>
+</ul>
+
+<h2>3. Changes, in priority order</h2>
+
+<div class="card"><h3><span class="n">1</span>Send heavy reading to Haiku on the Mac</h3>
+<p><b>What:</b> Any job that reads more than a few files (transcripts, roster reconciliation, workspace scans, proposal prep) runs as <code>claude --model haiku --allowedTools "Read,Glob,Grep" -p "..."</code> in the Synteria folder. It runs as a tracked background job and writes one short report. Mocha reads only that report and checks any claim it plans to act on.</p>
+<p><b>Why:</b> This is Mitchell's main point, and it fits your cost concern. Today's test went fine. It also showed the rule: Haiku reported two launchd jobs as broken because it missed that their paths are symlinks. They work. So verify before you act.</p>
+<div class="tags"><span class="tag">Effort: small</span><span class="tag hi">Usage: large drop</span><span class="tag w">Needs the Mac awake; falls back to connectors</span></div></div>
+
+<div class="card"><h3><span class="n">2</span>Cut routine frequency and stop duplicate pings</h3>
+<p><b>What:</b> Inbox watch goes from hourly 07:30 to 22:30 (16 runs a day) to four runs (08:30, 12:30, 17:30, 21:30), and stays silent unless something is new. Meeting prep goes from hourly (11 runs) to the morning brief plus one run about 90 minutes before each call. On most days that's the 19:00+ evening calls. Keep a small "already pinged" ledger of thread and event IDs so nothing gets reported twice. Re-run the routines that failed on 8 Oct once as a test, and if any fails again, read the error before changing anything.</p>
+<p><b>Why:</b> These two routines account for about 27 of the roughly 30 weekday runs and cause most of the repeat pings.</p>
+<div class="tags"><span class="tag">Effort: small</span><span class="tag hi">Usage: large drop</span></div></div>
+
+<div class="card"><h3><span class="n">3</span>Read Instantly Unibox replies through the Mac instead of pasting them</h3>
+<p><b>What:</b> Inbox watch and Follow-ups call the existing read-only functions in <code>instantly_api.py</code> on the Mac (interested leads, then each thread) with the project venv. Haiku turns the result into a list of "new reply, who, what they asked". No send or mutate functions, ever.</p>
+<p><b>Why:</b> This removes the most manual step you have, and the code already exists. Sends stay with you through the existing numbered gate.</p>
+<div class="tags"><span class="tag">Effort: medium</span><span class="tag">Usage: small (runs on the Mac)</span><span class="tag w">Each Mac call asks for local-tool approval</span></div></div>
+
+<div class="card"><h3><span class="n">4</span>A people key, matched on email address</h3>
+<p><b>What:</b> One short table: name, email, company, role (client, prospect, internal). Mocha matches people by email address or domain, never by first name alone. When a first name maps to more than one row, it uses the full name and company in every ping and draft.</p>
+<p><b>Why:</b> Mixing up people in a client draft costs trust. The workspace has at least six first-name clashes.</p>
+<div class="tags"><span class="tag">Effort: small</span><span class="tag hi">Usage: none</span></div></div>
+
+<div class="card"><h3><span class="n">5</span>Proposals owed: draft them, never send</h3>
+<p><b>What:</b> Monday pipeline review and Follow-ups show one "owed" list with a deadline for each item (Hitch and Graziani before Tue 13 Oct; Ilan Dayan's objection reply; Porter Pro, LIT and Obieo nudges). For each item, Haiku drafts the proposal terms from the Fathom transcript and the client's file, in the Proposal gen format. Mocha hands you a Gmail draft, or the content for <code>proposal-cli.ts</code>, for you to check and send.</p>
+<p><b>Why:</b> Proposals are where revenue is stuck. Right now this list exists only in the roster text.</p>
+<div class="tags"><span class="tag">Effort: medium</span><span class="tag">Usage: medium, mostly on the Mac</span></div></div>
+
+<div class="card"><h3><span class="n">6</span>Call pack in meeting prep</h3>
+<p><b>What:</b> For sales calls, meeting prep pulls one screen from <code>sales_playbooks/</code> (framework v2, discovery playbook) and the prospect's last Fathom transcript: what they said, what you quoted, what you owe, three questions to ask. Client calls use <code>_clients/&lt;slug&gt;/</code> and ROSTER instead.</p>
+<p><b>Why:</b> The scripts exist, but Mocha can't see them, so prep stays generic.</p>
+<div class="tags"><span class="tag">Effort: small</span><span class="tag">Usage: small</span></div></div>
+
+<div class="card"><h3><span class="n">7</span>Weekly roster drift check in the Friday wrap</h3>
+<p><b>What:</b> Haiku compares <code>_clients/ROSTER.md</code>, <code>registry.json</code>, <code>_state/ATTENTION.md</code> and live Instantly campaign status, then lists the conflicts. You edit the roster. Mocha never does.</p>
+<p><b>Why:</b> N5, AdCrunch, Vector is Love and Hitch are out of sync today, and Mocha's briefs inherit whatever the roster says.</p>
+<div class="tags"><span class="tag">Effort: small</span><span class="tag">Usage: small</span></div></div>
+
+<h2>4. What not to do</h2>
+<ul>
+<li>No sending, booking or Instantly writes. Drafts only. The Follow ups gates stay the only send path.</li>
+<li>No paid lookups (GetLeads, Airscale, Clay) without your yes on that specific run.</li>
+<li>No writes to the Synteria workspace, including memory, the roster and Notion system rows owned by other jobs.</li>
+<li>Don't rebuild what Modal already does (hot-reply cards, 08:00 digest). Read from those jobs, don't repeat them.</li>
+<li>No multi-bot hierarchy, MCP gateway, VPS or new connectors until the changes above prove too small.</li>
+<li>Don't trust a Haiku summary on its own. Check a claim against the source before it shows up in a ping or a draft.</li>
+</ul>
+
+<h2>5. First week</h2>
+<table>
+<tr><th>Day</th><th>Do</th></tr>
+<tr><td>Fri 9 Oct</td><td>Re-run the failed routines once. Apply the new schedule for Inbox watch and Meeting prep. Start the pinged ledger. Write the people key.</td></tr>
+<tr><td>Sun 11 Oct</td><td>Week ahead lists everything owed before Tue: Hitch proposal, onboarding form, sample resend; Graziani proposal and case studies. Get the full name for Sapt.</td></tr>
+<tr><td>Mon 12 Oct</td><td>Haiku drafts the Hitch and Graziani proposals from their transcripts for you to review. The call pack goes live for the Well-Oiled check-in at 20:30.</td></tr>
+<tr><td>Tue 13 Oct</td><td>Calls. Meeting prep runs once before each one.</td></tr>
+<tr><td>Wed 14 Oct</td><td>Test the read-only Unibox read on one client (Synteria house). Compare it with what you'd have pasted by hand.</td></tr>
+<tr><td>Fri 16 Oct</td><td>First drift check. Compare this week's usage with last week's and cut further if needed.</td></tr>
+</table>
+<p class="mut">Not checked: the full Notion Prospect CRM, Discord history, and live Grok Bot usage numbers. Times are Dublin.</p>
+</main>
+</body>
+</html>
