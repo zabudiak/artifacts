@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Mocha Upgrade Plan</title>
+<style>
+:root {
+  --bg: #0b0b0c;
+  --panel: #131314;
+  --line: #2a2826;
+  --text: #e8e3d8;
+  --muted: #a39d92;
+  --accent: #a8433a;
+  --accent-soft: rgba(168, 67, 58, 0.14);
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --type: "American Typewriter", "Courier Prime", "Courier New", Courier, monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgba(255,255,255,0.05), transparent 60%),
+    radial-gradient(ellipse at 50% 120%, rgba(0,0,0,0.9), transparent 60%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.6;
+}
+.wrap { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+header { border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 8px; }
+.kicker {
+  font-family: var(--type); font-size: 12px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--accent); margin: 0 0 12px;
+}
+h1 {
+  font-family: var(--type); font-weight: 400; font-size: 34px; line-height: 1.15;
+  margin: 0 0 12px; letter-spacing: 0.01em;
+}
+h2 {
+  font-family: var(--type); font-weight: 400; font-size: 21px; letter-spacing: 0.04em;
+  margin: 44px 0 14px; padding-top: 14px; border-top: 1px solid var(--line);
+}
+h2 .n { color: var(--accent); margin-right: 10px; }
+h3 { font-family: var(--type); font-weight: 400; font-size: 17px; margin: 22px 0 6px; }
+p { margin: 0 0 14px; }
+.meta { color: var(--muted); font-size: 14px; margin: 0; }
+.verdict {
+  background: var(--panel); border-left: 3px solid var(--accent);
+  padding: 16px 18px; margin: 24px 0 0; font-size: 18px;
+}
+ul, ol { padding-left: 22px; margin: 0 0 14px; }
+li { margin-bottom: 8px; }
+li::marker { color: var(--accent); }
+strong { font-weight: 600; color: #f4efe4; }
+code {
+  font-family: var(--type); font-size: 14px; background: #1b1a19;
+  padding: 1px 5px; border-radius: 3px; word-break: break-word;
+}
+.card {
+  background: var(--panel); border: 1px solid var(--line);
+  padding: 14px 16px; margin: 0 0 12px;
+}
+.card .due {
+  font-family: var(--type); font-size: 13px; letter-spacing: 0.06em;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 4px;
+}
+.card .who { font-family: var(--type); font-size: 16px; margin-bottom: 6px; }
+.card p:last-child, .card ul:last-child { margin-bottom: 0; }
+.tag {
+  display: inline-block; font-family: var(--type); font-size: 11px; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 1px 7px; border: 1px solid var(--accent);
+  color: var(--accent); margin-left: 6px; vertical-align: 2px;
+}
+.tag.block { background: var(--accent-soft); }
+.step { counter-increment: step; position: relative; padding-left: 44px; margin-bottom: 22px; }
+.step::before {
+  content: counter(step); position: absolute; left: 0; top: -4px;
+  font-family: var(--type); font-size: 28px; color: var(--accent);
+}
+.steps { counter-reset: step; }
+.day { border-left: 1px solid var(--line); padding: 0 0 4px 16px; margin-bottom: 18px; }
+.day .d { font-family: var(--type); color: var(--accent); font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; }
+.note { color: var(--muted); font-size: 15px; }
+footer { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 16px; color: var(--muted); font-size: 14px; }
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  h1 { font-size: 27px; }
+  h2 { font-size: 19px; }
+  .wrap { padding-top: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Case file · Mocha OS</p>
+  <h1>Upgrading Mocha: the corrected plan</h1>
+  <p class="meta">Fri 9 Oct 2026. Built from the first plan and a second review, then checked read-only against the workspace. All times are Dublin. People and companies are labelled, not named.</p>
+  <div class="verdict"><strong>Verdict.</strong> The direction is right: fewer runs, cheap local reading, drafts only. The first plan was wrong in two places. It rebuilt reply detection that already runs in the cloud, and its owed list missed people and treated one proposal as ready to draft when it isn't.</div>
+</header>
+
+<h2><span class="n">01</span>What to keep</h2>
+<ul>
+  <li><strong>Fewer routine runs, plus an "already pinged" ledger</strong> of thread and event IDs so nothing is reported twice.</li>
+  <li><strong>Heavy reading on the Mac with Haiku</strong>, writing one short report. Mocha checks any claim against its source before acting on it.</li>
+  <li><strong>Drafts only.</strong> No booking, no Instantly writes, no new connectors, no extra bot layer, no server.</li>
+  <li><strong>No paid lookups</strong> without a yes for that specific run.</li>
+  <li><strong>Call packs</strong> from the existing sales playbooks folder (call framework v2, discovery playbook, call cockpit, ICP notes). The files exist.</li>
+  <li><strong>A people key matched on email address</strong>, never on first name alone. The workspace has several first-name clashes.</li>
+</ul>
+
+<h2><span class="n">02</span>What to cut</h2>
+<div class="card">
+  <div class="who">The new Unibox reader <span class="tag">cut</span></div>
+  <p>The hot-reply watcher already does this. It runs on Modal off Instantly reply webhooks, checks at 5, 15, 30 and 60 seconds, then again at 2 to 30 minutes for late labels. It posts each new Interested reply to the internal Discord hot-replies channel and to the client's own Slack or Chat. A Mocha poll of Instantly would duplicate all of it. <strong>Mocha reads the watcher's Discord channel instead.</strong></p>
+</div>
+<div class="card">
+  <div class="who">"The Follow Ups gate is the only send path" <span class="tag">wrong</span></div>
+  <p>Since 3 Oct the watcher auto-sends replies that pass a separate readiness check, for the house account and two client accounts, behind its own switch. Mocha must know this so it doesn't flag those replies as unanswered or draft a second reply.</p>
+</div>
+<div class="card">
+  <div class="who">The roster drift check as a new Haiku job <span class="tag">cut</span></div>
+  <p><code>_state/ATTENTION.md</code> is regenerated daily and already flags the stale draft batch (29 days) and two clients with no local movement. The Friday wrap reads that file and the roster's own "conflict" notes. Zaid edits the roster. Mocha never does.</p>
+</div>
+<div class="card">
+  <div class="who">Drafting proposals from Proposal gen defaults <span class="tag">cut</span></div>
+  <p>Terms agreed on recent calls differ from the defaults and from each other. A draft uses the terms said on that prospect's call, from the transcript, and leaves a gap marked where a term is open.</p>
+</div>
+
+<h2><span class="n">03</span>The owed list</h2>
+<p class="note">From the client roster (reconciled 8 Oct) and the 9 Oct notes for Prospect A. A Unibox reply doesn't show in Gmail Sent, so check both before calling anything overdue.</p>
+
+<div class="card">
+  <div class="due">Tonight · Fri 9 Oct, 20:30</div>
+  <div class="who">Prospect C: first call</div>
+  <p>Positive reply 5 Oct, pays only per qualified attended meeting. No prep file and no email thread found. Owed: a call pack before 20:30.</p>
+</div>
+<div class="card">
+  <div class="due">Overdue on the roster's terms · was due by about 20:30, 8 Oct</div>
+  <div class="who">Prospect D: written reply to an objection</div>
+  <p>Sent a written objection on the evening of 7 Oct about price, qualification and handover. Owed: a reply with qualification and handover first, economics second, and no new terms. Then a nudge in two weeks. They are calling references, so line the numbers up first.</p>
+</div>
+<div class="card">
+  <div class="due">Now · silent 9 days</div>
+  <div class="who">Prospect E: nudge with two new slots</div>
+  <p>Pricing went in writing on 30 Sep. No reply since. The promised draft proposal and follow-up call aren't evidenced. The figure said on the call and the one in the email differ; use the email's.</p>
+</div>
+<div class="card">
+  <div class="due">Now</div>
+  <div class="who">Prospect F: check-in with a fresh slot</div>
+  <p>Proposal sent and opened 3 Oct. Declined the 5 Oct follow-up and hasn't replied. Wants to show a partner.</p>
+</div>
+<div class="card">
+  <div class="due">By Sat 10 Oct, then close</div>
+  <div class="who">Prospect G: one last nudge</div>
+  <p>Missed the 2 Oct call and declined the 6 Oct one. Rebook links sent 2 and 6 Oct, no reply. A stale 6 Oct booking still shows as accepted in Cal.com.</p>
+</div>
+<div class="card">
+  <div class="due">Owed since 3 Oct</div>
+  <div class="who">Prospect H: reply with specifics</div>
+  <p>Asked for specifics, a testimonial and case study, and pricing, in the house Unibox. No reply visible as of 8 Oct. Owed: the approved case study and a short offer description. This kind of reply may not reach the hot-reply channel if it wasn't marked Interested, so check the Unibox directly.</p>
+</div>
+<div class="card">
+  <div class="due">Before Tue 13 Oct, 20:00</div>
+  <div class="who">Prospect A: onboarding form, sample resend, "a look" <span class="tag">partly blocked</span></div>
+  <ul>
+    <li>Onboarding form, promised before the next call. Open question: which form, since the current one doesn't ask about offers.</li>
+    <li>Resend the 400-company sample list. The link still loads.</li>
+    <li>"I'll send you a look" before the call. The transcript is unclear whether that was a video or the offer ideas.</li>
+  </ul>
+</div>
+<div class="card">
+  <div class="due">Tied to Tue 13 Oct, 20:00</div>
+  <div class="who">Prospect A: proposal with terms <span class="tag block">blocked</span></div>
+  <p>Can't be drafted yet. The 9 Oct notes list 8 open questions, including whether monthly infrastructure is the figure quoted or the lower sum of the parts named, and whether the prospect approves each lead or only the criteria. Agreed terms: no setup fee, no guarantee, a per-meeting price set on the call. Draft only after Zaid answers.</p>
+</div>
+<div class="card">
+  <div class="due">Before Tue 13 Oct, 20:30</div>
+  <div class="who">Prospect B: proposal, case studies, offer to share the stack</div>
+  <p>Discovery call 6 Oct. The quote on that call differs from Prospect A's terms; use that transcript only. None sent as of 8 Oct. The first invite address bounced; use the working domain on the roster. Case studies come only from approved proof, never from the three withdrawn ones.</p>
+</div>
+<div class="card">
+  <div class="due">Mon 12 Oct, 20:30</div>
+  <div class="who">Client A: growth check-in</div>
+  <p>Two leads are waiting on the client's pricing position. A promised video from the client is unanswered since 7 Oct. Owed by Zaid: quality feedback on the delivered videos.</p>
+</div>
+<div class="card">
+  <div class="due">This week</div>
+  <div class="who">Prospects I and J: check-in, then close</div>
+  <p>Prospect I: proposal 1 Sep, nothing sent for about 29 days. Prospect J: proposal 24 Aug, last check-in 13 Sep, the final nudge isn't evidenced. One message each, then close.</p>
+</div>
+<div class="card">
+  <div class="due">Needs a name</div>
+  <div class="who">Contact X</div>
+  <p>No match anywhere in the client files. Zaid to give the full name or company.</p>
+</div>
+
+<h2><span class="n">04</span>Top three changes, in order</h2>
+<div class="steps">
+  <div class="step">
+    <h3>Cut runs and stop duplicate pings</h3>
+    <p>Inbox watch drops to four runs a day (08:30, 12:30, 17:30, 21:30) and stays silent unless something is new. Meeting prep becomes the morning brief plus one run about 90 minutes before each call. Inbox watch reads the hot-reply Discord channel rather than Instantly, and the pinged ledger filters out anything already posted there or auto-sent. Biggest cost drop, and it ends the repeat pings from three systems reporting the same reply.</p>
+  </div>
+  <div class="step">
+    <h3>One owed list with deadlines</h3>
+    <p>The Monday pipeline review and Follow-ups show the list above as one view: who, what, deadline, source. Proposals are drafted only after Zaid answers that prospect's open questions, using terms from that prospect's transcript. Fathom transcripts only, never Fathom summaries. Mocha hands over a draft. Zaid sends.</p>
+  </div>
+  <div class="step">
+    <h3>Heavy reading through one fixed, read-only script</h3>
+    <p>One script on the Mac with a fixed set of read-only calls, run by Haiku, writing one report. Haiku never writes its own Python against the Instantly helper. Spot-check each report against the source before anything from it lands in a ping or a draft.</p>
+  </div>
+</div>
+
+<h2><span class="n">05</span>Risks</h2>
+<ul>
+  <li><strong>Tool limits.</strong> A Haiku run limited to Read, Glob and Grep can't execute Python, so it can't call the Instantly helper. That's another reason to use one fixed script rather than ad hoc calls.</li>
+  <li><strong>Read-only by convention only.</strong> The Instantly helper's send function is disabled, but its internal request function can still send POST requests. Only the fixed script may import it.</li>
+  <li><strong>Approval prompts block schedules.</strong> If every Mac call asks for approval, the four scheduled runs can't run unattended. Pre-approve the one script and nothing else.</li>
+  <li><strong>Silent misses.</strong> If the Mac is asleep, a run is skipped and nobody hears about it. Mocha pings Zaid when a run fails or doesn't happen.</li>
+  <li><strong>Haiku gets things wrong.</strong> It already reported two working launchd jobs as broken because it missed that their paths are symlinks. Treat its output as leads, not facts.</li>
+  <li><strong>The watcher's blind spot.</strong> It reports Interested replies only. A question reply without that label, like Prospect H's, needs a direct Unibox check.</li>
+  <li><strong>Back-to-back calls on Tue 13 Oct</strong> (20:00 and 20:30). One combined prep run before 18:30 covers both.</li>
+</ul>
+
+<h2><span class="n">06</span>First week</h2>
+<div class="day">
+  <div class="d">Fri 9 Oct</div>
+  <p>Call pack for Prospect C before 20:30. Confirm in Gmail and the Unibox whether Prospect D got a reply; if not, draft one. Draft nudges for E and F. Apply the new schedule, start the ledger, point inbox watch at the hot-reply channel. Re-run the routines that failed on 8 Oct once, and read the error if any fails again.</p>
+</div>
+<div class="day">
+  <div class="d">Sat 10 Oct</div>
+  <p>Last nudge to Prospect G, then close it on the roster. Draft the reply to Prospect H.</p>
+</div>
+<div class="day">
+  <div class="d">Sun 11 Oct</div>
+  <p>Zaid answers Prospect A's 8 open questions. Week-ahead view shows the owed list. Get the full name for Contact X.</p>
+</div>
+<div class="day">
+  <div class="d">Mon 12 Oct</div>
+  <p>Draft Prospect A's proposal from the transcript and Zaid's answers. Draft Prospect B's proposal and case studies from approved proof. Send A the onboarding form and the sample link. Call pack for Client A at 20:30. Check-ins to I and J.</p>
+</div>
+<div class="day">
+  <div class="d">Tue 13 Oct</div>
+  <p>Everything for A and B out by mid-afternoon. One prep run before 18:30. Calls at 20:00 and 20:30. Log outcomes on the roster afterwards.</p>
+</div>
+<div class="day">
+  <div class="d">Wed 14 Oct</div>
+  <p>Test the fixed read-only script on the house account. Compare its report with the source by hand.</p>
+</div>
+<div class="day">
+  <div class="d">Fri 16 Oct</div>
+  <p>Friday wrap reads <code>_state/ATTENTION.md</code> and the roster conflicts. Compare this week's usage with last week's and cut further if needed.</p>
+</div>
+
+<footer>
+  Not checked: Mocha's actual routine schedule and usage numbers, so the run counts are the first plan's figures. Also not checked: live Gmail, Calendar and Instantly today, the full Notion CRM and Discord history. The owed list reflects the roster as reconciled on 8 Oct.
+</footer>
+
+</div>
+</body>
+</html>
